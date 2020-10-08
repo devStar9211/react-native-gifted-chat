@@ -181,6 +181,8 @@ export interface GiftedChatProps<TMessage extends IMessage = IMessage> {
   renderChatEmpty?(): React.ReactNode
   /* Custom component to render below the MessageContainer (separate from the ListView) */
   renderChatFooter?(): React.ReactNode
+  /* Custom message top composer container */
+  renderTop?(): React.ReactNode
   /* Custom message composer container */
   renderInputToolbar?(props: InputToolbar['props']): React.ReactNode
   /*  Custom text input message composer */
@@ -269,6 +271,7 @@ class GiftedChat<TMessage extends IMessage = IMessage> extends React.Component<
     renderFooter: null,
     renderChatEmpty: null,
     renderChatFooter: null,
+    renderTop: null,
     renderInputToolbar: null,
     renderComposer: null,
     renderActions: null,
@@ -336,6 +339,7 @@ class GiftedChat<TMessage extends IMessage = IMessage> extends React.Component<
     renderFooter: PropTypes.func,
     renderChatEmpty: PropTypes.func,
     renderChatFooter: PropTypes.func,
+    renderTop: PropTypes.func,
     renderInputToolbar: PropTypes.func,
     renderComposer: PropTypes.func,
     renderActions: PropTypes.func,
@@ -831,6 +835,13 @@ class GiftedChat<TMessage extends IMessage = IMessage> extends React.Component<
     }
   }
 
+  renderTop() {
+    if (this.props.renderTop) {
+      return this.props.renderTop()
+    }
+    return null
+  }
+
   renderInputToolbar() {
     const inputToolbarProps = {
       ...this.props,
@@ -878,6 +889,7 @@ class GiftedChat<TMessage extends IMessage = IMessage> extends React.Component<
           <ActionSheetProvider
             ref={(component: any) => (this._actionSheetRef = component)}
           >
+              {this.renderTop()}
             <View style={styles.container} onLayout={this.onMainViewLayout}>
               {this.renderMessages()}
               {this.renderInputToolbar()}
